@@ -1,0 +1,12 @@
+.jumbotron {
+	background-image: url(../images/symphony.png);
+}
+
+.jumbotron h1 {
+	color: #009999;
+	text-align: center;
+}
+
+.table-header {
+	font-weight: bold;
+}
