@@ -24,14 +24,11 @@ $("#submit").on("click", function() {
     train: trainName,
     destination: destination,
     time: trainTime,
-    freq: frequency
+    freq: frequency,
+    dateAdded: firebase.database.ServerValue.TIMESTAMP
   };
 
   database.ref().push(newTrainSchedule);
-  console.log(newTrainSchedule.train);
-  console.log(newTrainSchedule.destination);
-  console.log(newTrainSchedule.time);
-  console.log(newTrainSchedule.freq);
 
   $("#train").val("");
   $("#destination").val("");
@@ -41,22 +38,30 @@ $("#submit").on("click", function() {
 });
 
 database.ref().on("child_added", function(childSnapshot) {
-  console.log(childSnapshot.val());
 
   var trainName = childSnapshot.val().train;
   var destination = childSnapshot.val().destination;
   var trainTime = childSnapshot.val().time;
   var frequency = childSnapshot.val().freq;
 
-  console.log(trainName);
-  console.log(destination);
-  console.log(trainTime);
-  console.log(frequency);
+  var trainTimeConverted = moment(trainTime, "HH:mm");
+
+  var currentTime = moment();
+
+  var timeDifference = moment().diff(moment.unix(trainTimeConverted, "X"), "minutes");
+
+  var timeRemaining = timeDifference % frequency;
+
+  var minutesUntilTrain = frequency - timeRemaining; 
+
+  var nextArrival = moment().add(minutesUntilTrain, "minutes");
+  var arrivalTime = moment(nextArrival).format("HH:mm");  
+
   
   // var trainTimeFormatted = moment.unix(trainTime).format("HH:mm");
 
   $(".trainschedule > tbody").append("<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" + frequency
-  + "</td><td>" + "[insert next arrival time]" + "</td><td>" + "[insert minutes away]" + "</td></tr>");
+  + "</td><td>" + arrivalTime + "</td><td>" + minutesUntilTrain + "</td></tr>");
 });
 
 
