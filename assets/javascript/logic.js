@@ -45,18 +45,18 @@ database.ref().on("child_added", function(childSnapshot) {
 
   var trainName = childSnapshot.val().train;
   var destination = childSnapshot.val().destination;
-  var trainTime = childSnapshot.val().trainTime;
-  var frequency = childSnapshot.val().frequency;
+  var trainTime = childSnapshot.val().time;
+  var frequency = childSnapshot.val().freq;
 
   console.log(trainName);
   console.log(destination);
   console.log(trainTime);
   console.log(frequency);
   
-  var trainTimeFormatted = moment.unix(trainTime).format("HH:mm");
+  // var trainTimeFormatted = moment.unix(trainTime).format("HH:mm");
 
-  $(".trainschedule > tbody").append("<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" +
-  trainTimeFormatted + "</td><td>" + frequency + "</td></tr>");
+  $(".trainschedule > tbody").append("<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" + frequency
+  + "</td><td>" + "[insert next arrival time]" + "</td><td>" + "[insert minutes away]" + "</td></tr>");
 });
 
 
