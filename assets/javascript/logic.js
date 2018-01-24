@@ -20,6 +20,9 @@ $("#submit").on("click", function() {
   var trainTime = moment($("#time").val().trim(), "HH.mm").format("X");
   var frequency = $("#freq").val().trim();
 
+  console.log(trainTime + " train time");
+  console.log(moment(trainTime, "X").format("HH:mm") + " Traintimeformated");
+
   var newTrainSchedule = {
     train: trainName,
     destination: destination,
@@ -44,21 +47,28 @@ database.ref().on("child_added", function(childSnapshot) {
   var trainTime = childSnapshot.val().time;
   var frequency = childSnapshot.val().freq;
 
-  var trainTimeConverted = moment(trainTime, "HH:mm");
+  var trainTimeConvert = moment(trainTime, "X").format("HH:mm");
+  console.log("Train Time " + trainTimeConvert);
 
-  var currentTime = moment();
+  var currentTimeFormatted = moment();
+  console.log("currenttime " + moment().format("HH:mm"));
 
-  var timeDifference = moment().diff(moment.unix(trainTimeConverted, "X"), "minutes");
+  var timeDifference = moment().diff(moment(trainTimeConvert, "HH:mm"), "minutes");
+  console.log("timeDifferent " + timeDifference);
 
   var timeRemaining = timeDifference % frequency;
 
+  console.log("Time Remaining " + timeRemaining);
+
   var minutesUntilTrain = frequency - timeRemaining; 
 
-  var nextArrival = moment().add(minutesUntilTrain, "minutes");
-  var arrivalTime = moment(nextArrival).format("HH:mm");  
+  console.log("Minutes Until Train " + minutesUntilTrain);
 
+  var nextArrival = moment().add(minutesUntilTrain, "minutes");
+  console.log("Next Arrival " + nextArrival);
+  var arrivalTime = moment(nextArrival).format("HH:mm");  
+  console.log("Arrival Time " + arrivalTime);
   
-  // var trainTimeFormatted = moment.unix(trainTime).format("HH:mm");
 
   $(".trainschedule > tbody").append("<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" + frequency
   + "</td><td>" + arrivalTime + "</td><td>" + minutesUntilTrain + "</td></tr>");
