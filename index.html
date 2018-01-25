@@ -37,13 +37,6 @@
 							<td>Next Arrival</td>
 							<td>Minutes Away</td>
 						</tr>
-<!-- 						<tr class="table-body">
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr> -->
 					</table>
 				</div>
 			</div>
@@ -55,7 +48,7 @@
 						<h3 class="panel-title">Add Train</h3>
 					</div>
 					<div class="panel-body">
-						<form>
+						<form action="#" method="POST">
 							<label for="train">Train Name:</label>
 							<div class="input-group">
 								<input type="text" id="train" required>
@@ -68,7 +61,7 @@
 							<br>
 							<label for="time">First Train Time (HH:mm - military time):</label>
 							<div class="input-group">
-								<input type="text" id="time" value="HH:mm" required>
+								<input id="time" value="HH:mm" required>
 							</div>
 							<br>
 							<label for="freq">Frequency (minutes):</label>
@@ -76,7 +69,7 @@
 								<input type="number" id="freq" required>
 							</div>
 							<br>
-							<button type="button" id="submit" class="btn btn-default">Submit</button>
+							<button type="submit" id="submit" class="btn btn-default">Submit</button>
 						</form>
 					</div>
 				</div>

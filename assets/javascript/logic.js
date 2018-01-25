@@ -15,6 +15,21 @@ var database = firebase.database();
 $("#submit").on("click", function() {
   event.preventDefault();
 
+  function validateForm() {
+    var y = $("#freq").val();
+    var x = $("#time").val();
+    if (x >24+":00" || "") {
+      text = "Invalid entry. Please enter a valid military time";
+      alert(text);
+    } 
+    if (y < 0) {
+       text = "Please enter a positive number";
+      alert(text);
+    } 
+  }
+
+  validateForm();
+
   var trainName = $("#train").val().trim();
   var destination = $("#destination").val().trim();
   var trainTime = moment($("#time").val().trim(), "HH.mm").format("X");
@@ -48,9 +63,8 @@ database.ref().on("child_added", function(childSnapshot) {
   var frequency = childSnapshot.val().freq;
 
   var trainTimeFormat = moment(trainTime, "X").format("HH:mm");
-
-  // var trainTimeConvert = moment(trainTimeFormat, "HH:mm").subtract(1, "years");
   var trainTimeConvert = moment(trainTimeFormat, "HH:mm");
+
   console.log("Train Time " + trainTimeConvert);
   console.log("Train Time Convert" + moment(trainTimeConvert, "X").format("HH:mm"));
 
@@ -60,33 +74,33 @@ database.ref().on("child_added", function(childSnapshot) {
   var timeDifference = moment().diff(moment(trainTimeConvert, "HH:mm"), "minutes");
   console.log("timeDifferent " + timeDifference);
 
-  // var timeRemaining = Math.abs(timeDifference) % frequency;
-  // console.log("Time Remaining " + timeRemaining);
-  // var minutesUntilTrain = frequency - timeRemaining; 
+  var minutesUntilTrain;
+  var Arrival;
+  var arrivalFormatted;
+  var timeRemaining;
+  var nextArrival;
+  var arrivalTime;
+
+  function timeDifferenceCalculate () {
+  	timeDifference = Math.abs(timeDifference);
+  	timeRemaining = timeDifference % frequency;
+    console.log("time Remaining " + timeRemaining);
+  	minutesUntilTrain = frequency - timeRemaining; 
+    Arrival = moment().add(timeRemaining, "minutes");
+    arrivalFormatted = moment(Arrival).format("HH:mm");
+    nextArrival = moment().add(minutesUntilTrain, "minutes");
+    arrivalTime = moment(nextArrival).format("HH:mm"); 
+  }
 
   if (timeDifference < 0) {
-    timeDifference = Math.abs(timeDifference);
-    var timeRemaining = timeDifference % frequency;
-    console.log("Time Remaining " + timeRemaining);
-    var minutesUntilTrain = frequency - timeRemaining; 
-  	console.log("minutes until train " + minutesUntilTrain);
-  	var Arrival = moment().add(timeRemaining, "minutes");
-  	// var Arrival = moment().substract(trainTime);
-  	console.log("arrival " + Arrival);
-  	var arrivalFormatted = moment(Arrival, "X").format("HH:mm");
+    timeDifferenceCalculate();
   	$(".trainschedule > tbody").append("<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" + frequency
   + "</td><td>" + arrivalFormatted + "</td><td>" + timeRemaining + "</td></tr>");
   	console.log("ARRIVAL " + arrivalFormatted);
   }
 
   else {
-    var timeRemaining = Math.abs(timeDifference) % frequency;
-    console.log("Time Remaining " + timeRemaining);
-    var minutesUntilTrain = frequency - timeRemaining; 
-    var nextArrival = moment().add(minutesUntilTrain, "minutes");
-    console.log("Next Arrival " + nextArrival);
-    var arrivalTime = moment(nextArrival).format("HH:mm");  
-    console.log("Arrival Time " + arrivalTime);
+    timeDifferenceCalculate();
     $(".trainschedule > tbody").append("<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" + frequency
   + "</td><td>" + arrivalTime + "</td><td>" + minutesUntilTrain + "</td></tr>");
   }
