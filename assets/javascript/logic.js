@@ -81,26 +81,26 @@ database.ref().on("child_added", function(childSnapshot) {
   var nextArrival;
   var arrivalTime;
 
-  function timeDifferenceCalculate () {
+  function timeDifferenceCalculate (frequency) {
   	timeDifference = Math.abs(timeDifference);
   	timeRemaining = timeDifference % frequency;
     console.log("time Remaining " + timeRemaining);
   	minutesUntilTrain = frequency - timeRemaining; 
-    Arrival = moment().add(timeRemaining, "minutes");
-    arrivalFormatted = moment(Arrival).format("HH:mm");
+    Arrival = moment(trainTimeFormat, "X");
+    arrivalFormatted = moment(Arrival, "X").format("HH:mm");
     nextArrival = moment().add(minutesUntilTrain, "minutes");
     arrivalTime = moment(nextArrival).format("HH:mm"); 
   }
 
   if (timeDifference < 0) {
-    timeDifferenceCalculate();
+    timeDifferenceCalculate(frequency);
   	$(".trainschedule > tbody").append("<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" + frequency
-  + "</td><td>" + arrivalFormatted + "</td><td>" + timeRemaining + "</td></tr>");
+  + "</td><td>" + arrivalFormatted + "</td><td>" + timeDifference + "</td></tr>");
   	console.log("ARRIVAL " + arrivalFormatted);
   }
 
   else {
-    timeDifferenceCalculate();
+    timeDifferenceCalculate(frequency);
     $(".trainschedule > tbody").append("<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" + frequency
   + "</td><td>" + arrivalTime + "</td><td>" + minutesUntilTrain + "</td></tr>");
   }
