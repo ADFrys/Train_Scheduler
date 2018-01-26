@@ -43,7 +43,6 @@ $("#submit").on("click", function() {
     destination: destination,
     time: trainTime,
     freq: frequency,
-    dateAdded: firebase.database.ServerValue.TIMESTAMP
   };
 
   database.ref().push(newTrainSchedule);
@@ -52,7 +51,6 @@ $("#submit").on("click", function() {
   $("#destination").val("");
   $("#time").val("");
   $("#freq").val("");
-
 });
 
 database.ref().on("child_added", function(childSnapshot) {
@@ -83,6 +81,7 @@ database.ref().on("child_added", function(childSnapshot) {
 
   function timeDifferenceCalculate (frequency) {
   	timeDifference = Math.abs(timeDifference);
+  	timeDifferenceplusOne = timeDifference + 1;
   	timeRemaining = timeDifference % frequency;
     console.log("time Remaining " + timeRemaining);
   	minutesUntilTrain = frequency - timeRemaining; 
@@ -95,7 +94,7 @@ database.ref().on("child_added", function(childSnapshot) {
   if (timeDifference < 0) {
     timeDifferenceCalculate(frequency);
   	$(".trainschedule > tbody").append("<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" + frequency
-  + "</td><td>" + arrivalFormatted + "</td><td>" + timeDifference + "</td></tr>");
+  + "</td><td>" + arrivalFormatted + "</td><td>" + timeDifferenceplusOne + "</td></tr>");
   	console.log("ARRIVAL " + arrivalFormatted);
   }
 
@@ -106,5 +105,3 @@ database.ref().on("child_added", function(childSnapshot) {
   }
  
 });
-
-
